@@ -107,11 +107,24 @@ app.post("/uploadProduct",async(req,res)=>{
 })
 
 //
-app.get("/product",async(req,res)=>{
+app.get("/product",async(res)=>{
   const data = await productModel.find({})
   res.send(JSON.stringify(data))
 })
-app.get("/userlist",async(req,res)=>{
+app.delete("/product/:id", async (req, res) => {
+  try {
+    const user = await userModel.findOneAndDelete({ _id: req.params.id });
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    res.send(JSON.stringify(user));
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/userlist",async(res)=>{
   const data = await userModel.find({})
   res.send(JSON.stringify(data))
 })
